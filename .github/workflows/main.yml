@@ -1,4 +1,4 @@
-name: 🪒 تشغيل الموقع من scraper.py
+name: 🪒 متجر الحلاقة SO2_MK
 
 on:
   push:
@@ -17,60 +17,44 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: 📥 تحميل المستودع
+    - name: تحميل المستودع
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
     
-    - name: 🐍 إعداد Python
+    - name: إعداد Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
     
-    - name: 🚀 تشغيل scraper.py لإنشاء الموقع
+    - name: تشغيل المولد
       run: python scraper.py
     
-    - name: 📂 عرض الملفات المنشأة
+    - name: عرض النتائج
       run: |
-        echo "📂 الملفات التي تم إنشاؤها:"
-        ls -la *.html *.json *.md 2>/dev/null || echo "  جاري البحث..."
-        echo ""
+        echo "📂 الملفات المنشأة:"
+        ls -la *.html *.json *.md 2>/dev/null || true
         if [ -f products.json ]; then
-          echo "📊 عدد المنتجات:"
-          python -c "import json; d=json.load(open('products.json')); print(f'  {d[\"total\"]} منتج')"
+          python3 -c "import json; d=json.load(open('products.json')); print(f'📊 المنتجات: {d[\"total\"]}')"
         fi
     
-    - name: 💾 حفظ التغييرات في GitHub
+    - name: حفظ التغييرات
       run: |
-        git config --global user.name '🤖 GitHub Actions'
-        git config --global user.email 'actions@github.com'
-        git add -A
+        git config user.name 'GitHub Actions'
+        git config user.email 'actions@github.com'
+        git add .
         if git diff --staged --quiet; then
-          echo "✅ لا توجد تغييرات جديدة"
+          echo "لا تغييرات"
         else
-          git commit -m "🪒 تحديث تلقائي من scraper.py - $(date '+%Y-%m-%d %H:%M')"
+          git commit -m "تحديث تلقائي [skip ci]"
           git push
-          echo "✅ تم رفع التغييرات"
         fi
     
-    - name: 🌐 نشر الموقع على GitHub Pages
+    - name: نشر للموقع
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./
         publish_branch: gh-pages
         force_orphan: true
-        commit_message: '🚀 نشر تلقائي [skip ci]'
-    
-    - name: 🎉 عرض الروابط النهائية
-      run: |
-        REPO_NAME=$(echo ${{ github.repository }} | cut -d'/' -f2)
-        USERNAME=$(echo ${{ github.repository }} | cut -d'/' -f1)
-        echo ""
-        echo "🌟 ========================================"
-        echo "  ✅ الموقع جاهز!"
-        echo "  🔗 https://$USERNAME.github.io/$REPO_NAME"
-        echo "  🔑 رمز الإدارة: 1234"
-        echo "  📦 Cloudinary: dmla61v7n/so2_mk"
-        echo "  🔥 Firebase: gomrka-420d0"
-        echo "========================================"
+        commit_message: 'نشر الموقع [skip ci]'
