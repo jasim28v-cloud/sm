@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "name": "ماكينة حلاقة احترافية X1",
+    "price": 299,
+    "category": "ماكينات",
+    "image": "https://res.cloudinary.com/dmla61v7n/image/upload/v1/so2_mk/product1.jpg",
+    "description": "ماكينة حلاقة متطورة للصالونات",
+    "stock": 50,
+    "rating": 4.8
+  },
+  {
+    "id": 2,
+    "name": "طقم أمشاط احترافي 12 قطعة",
+    "price": 149,
+    "category": "أمشاط",
+    "image": "https://res.cloudinary.com/dmla61v7n/image/upload/v1/so2_mk/product2.jpg",
+    "description": "مجموعة أمشاط متعددة المقاسات",
+    "stock": 100,
+    "rating": 4.6
+  },
+  {
+    "id": 3,
+    "name": "كريم حلاقة فاخر بالألوفيرا",
+    "price": 89,
+    "category": "كريمات",
+    "image": "https://res.cloudinary.com/dmla61v7n/image/upload/v1/so2_mk/product3.jpg",
+    "description": "كريم حلاقة مرطب ومهدئ",
+    "stock": 200,
+    "rating": 4.9
+  },
+  {
+    "id": 4,
+    "name": "فوطة حلاقة قطن مصري",
+    "price": 59,
+    "category": "فوط",
+    "image": "https://res.cloudinary.com/dmla61v7n/image/upload/v1/so2_mk/product4.jpg",
+    "description": "فوطة ناعمة 100% قطن",
+    "stock": 150,
+    "rating": 4.7
+  },
+  {
+    "id": 5,
+    "name": "زيت تشحيم ماكينات الحلاقة",
+    "price": 45,
+    "category": "زيوت",
+    "image": "https://res.cloudinary.com/dmla61v7n/image/upload/v1/so2_mk/product5.jpg",
+    "description": "زيت خاص لتشحيم وصيانة الماكينات",
+    "stock": 300,
+    "rating": 4.5
+  },
+  {
+    "id": 6,
+    "name": "فرشاة حلاقة من الشعر الطبيعي",
+    "price": 120,
+    "category": "فرش",
+    "image": "https://res.cloudinary.com/dmla61v7n/image/upload/v1/so2_mk/product6.jpg",
+    "description": "فرشاة يدوية من شعر الغرير",
+    "stock": 75,
+    "rating": 4.8
+  },
+  {
+    "id": 7,
+    "name": "ماكينة تشذيب اللحية بروفيشنال",
+    "price": 199,
+    "category": "ماكينات",
+    "image": "https://res.cloudinary.com/dmla61v7n/image/upload/v1/so2_mk/product7.jpg",
+    "description": "ماكينة تشذيب دقيقة للحية",
+    "stock": 80,
+    "rating": 4.7
+  },
+  {
+    "id": 8,
+    "name": "بخاخ معقم للأدوات",
+    "price": 35,
+    "category": "معقمات",
+    "image": "https://res.cloudinary.com/dmla61v7n/image/upload/v1/so2_mk/product8.jpg",
+    "description": "بخاخ تعقيم سريع للأدوات",
+    "stock": 500,
+    "rating": 4.4
+  }
+]
