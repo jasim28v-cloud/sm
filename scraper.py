@@ -93,8 +93,8 @@ def html():
             width: 100%;
         }}
         
-        /* زر الإدارة */
-        .btn-admin {{
+        /* زر التحميل */
+        .btn-upload {{
             background: linear-gradient(135deg, #c9a96e, #b8963d);
             color: #1a1a1a;
             border: none;
@@ -105,9 +105,15 @@ def html():
             cursor: pointer;
             transition: 0.3s;
             box-shadow: 0 4px 15px rgba(201, 169, 110, 0.4);
+            animation: glow 2s infinite;
         }}
         
-        .btn-admin:hover {{
+        @keyframes glow {{
+            0%, 100% {{ box-shadow: 0 4px 15px rgba(201, 169, 110, 0.4); }}
+            50% {{ box-shadow: 0 4px 30px rgba(201, 169, 110, 0.8); }}
+        }}
+        
+        .btn-upload:hover {{
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(201, 169, 110, 0.6);
         }}
@@ -396,7 +402,7 @@ def html():
             transform: translateY(-3px);
         }}
         
-        /* نافذة الإدارة */
+        /* نافذة التحميل */
         .modal-overlay {{
             display: none;
             position: fixed;
@@ -404,7 +410,7 @@ def html():
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             z-index: 9999;
             align-items: center;
             justify-content: center;
@@ -423,6 +429,7 @@ def html():
             animation: modalIn 0.4s ease;
             max-height: 90vh;
             overflow-y: auto;
+            position: relative;
         }}
         
         @keyframes modalIn {{
@@ -450,11 +457,13 @@ def html():
             margin-bottom: 15px;
             transition: 0.3s;
             font-family: 'Cairo', sans-serif;
+            width: 100%;
         }}
         
         .modal-box .form-control:focus {{
             border-color: #c9a96e;
             box-shadow: 0 0 20px rgba(201, 169, 110, 0.2);
+            outline: none;
         }}
         
         .btn-submit {{
@@ -492,6 +501,56 @@ def html():
         .btn-close-modal:hover {{
             background: #dc3545;
             color: white;
+        }}
+        
+        /* منطقة رفع الصورة */
+        .upload-area {{
+            border: 3px dashed #c9a96e;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 15px;
+            background: #fafafa;
+            transition: 0.3s;
+        }}
+        
+        .upload-area:hover {{
+            background: #f0f0f0;
+            border-color: #b8963d;
+        }}
+        
+        .upload-area i {{
+            font-size: 3rem;
+            color: #c9a96e;
+            margin-bottom: 10px;
+        }}
+        
+        .upload-area img {{
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }}
+        
+        .progress {{
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }}
+        
+        .progress-bar {{
+            height: 100%;
+            background: #c9a96e;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a1a1a;
+            font-weight: 700;
+            font-size: 0.85rem;
         }}
         
         /* إشعار */
@@ -579,6 +638,13 @@ def html():
             margin-bottom: 20px;
         }}
         
+        .lock-icon {{
+            font-size: 5rem;
+            color: #c9a96e;
+            display: block;
+            margin-bottom: 20px;
+        }}
+        
         /* Responsive */
         @media (max-width: 768px) {{
             .hero h1 {{
@@ -618,8 +684,9 @@ def html():
                     <li class="nav-item"><a class="nav-link" href="#contact">اتصل بنا</a></li>
                 </ul>
                 <div class="d-flex gap-3">
-                    <button class="btn-admin" onclick="openAdmin()">
-                        <i class="fas fa-plus-circle"></i> إضافة منتج
+                    <!-- ✅ زر تحميل منتج -->
+                    <button class="btn-upload" onclick="openUploadModal()">
+                        <i class="fas fa-cloud-upload-alt"></i> تحميل منتج
                     </button>
                     <button class="btn-cart" data-bs-toggle="modal" data-bs-target="#cartModal">
                         <i class="fas fa-shopping-cart"></i>
@@ -712,32 +779,41 @@ def html():
         </div>
     </section>
 
-    <!-- نافذة الإدارة -->
-    <div class="modal-overlay" id="adminModal">
-        <div class="modal-box" style="position: relative;">
-            <button class="btn-close-modal" onclick="closeAdmin()">✕</button>
+    <!-- ✅ نافذة تحميل المنتج المعدلة -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal-box">
+            <button class="btn-close-modal" onclick="closeUploadModal()">✕</button>
             
-            <div id="passSection">
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <i class="fas fa-lock" style="font-size: 4rem; color: #c9a96e;"></i>
-                    <h3 class="mt-3">لوحة التحكم</h3>
-                    <p>أدخل رمز التحقق للمتابعة</p>
+            <!-- الخطوة 1: كلمة المرور -->
+            <div id="passwordStep">
+                <div style="text-align: center;">
+                    <i class="fas fa-lock lock-icon"></i>
+                    <h3>🔐 تحميل منتج جديد</h3>
+                    <p style="color: #666; margin-bottom: 25px;">أدخل رمز التحقق للمتابعة</p>
                 </div>
-                <input type="password" id="adminPass" class="form-control" placeholder="🔑 أدخل الرمز السري">
-                <button class="btn-submit mt-3" onclick="checkPass()">
-                    <i class="fas fa-check"></i> دخول
+                <input type="password" id="uploadPassword" class="form-control" placeholder="🔑 أدخل الرمز السري">
+                <button class="btn-submit mt-3" onclick="verifyUploadPassword()">
+                    <i class="fas fa-check"></i> تحقق واستمر
                 </button>
             </div>
             
-            <div id="addSection" style="display: none;">
-                <h3 style="text-align: center;">
-                    <i class="fas fa-plus-circle"></i> إضافة منتج جديد
-                </h3>
-                <form id="addForm">
-                    <input type="text" id="prodName" class="form-control" placeholder="📝 اسم المنتج *" required>
-                    <input type="number" id="prodPrice" class="form-control" placeholder="💰 السعر (ضع سعرك)" required>
+            <!-- الخطوة 2: واجهة الرفع -->
+            <div id="uploadStep" style="display: none;">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: #c9a96e;"></i>
+                    <h3 class="mt-3">📤 رفع منتج جديد</h3>
+                    <p style="color: #666;">ارفع صورة المنتج وأدخل بياناته</p>
+                </div>
+                <form id="uploadForm">
+                    <label style="font-weight: 700; display: block; margin-bottom: 5px;">📝 اسم المنتج *</label>
+                    <input type="text" id="prodName" class="form-control" placeholder="اسم المنتج" required>
+                    
+                    <label style="font-weight: 700; display: block; margin-bottom: 5px;">💰 السعر الذي تحدده ({CURRENCY}) *</label>
+                    <input type="number" id="prodPrice" class="form-control" placeholder="أدخل السعر" required>
+                    
+                    <label style="font-weight: 700; display: block; margin-bottom: 5px;">📂 الفئة</label>
                     <select id="prodCat" class="form-control">
-                        <option value="">📂 اختر الفئة</option>
+                        <option value="">اختر الفئة</option>
                         <option>ماكينات حلاقة</option>
                         <option>أمشاط</option>
                         <option>كريمات حلاقة</option>
@@ -747,11 +823,26 @@ def html():
                         <option>معقمات</option>
                         <option>إكسسوارات</option>
                     </select>
-                    <input type="url" id="prodImage" class="form-control" placeholder="🖼️ رابط صورة المنتج *" required>
-                    <textarea id="prodDesc" class="form-control" rows="2" placeholder="📝 وصف المنتج"></textarea>
-                    <input type="number" id="prodStock" class="form-control" placeholder="📦 كمية المخزون" value="100">
-                    <button type="submit" class="btn-submit mt-3">
-                        <i class="fas fa-upload"></i> رفع المنتج
+                    
+                    <label style="font-weight: 700; display: block; margin-bottom: 5px;">🖼️ رفع صورة المنتج *</label>
+                    <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p><strong>اضغط هنا لرفع صورة المنتج</strong></p>
+                        <small style="color: #999;">الصورة ترفع مباشرة إلى Cloudinary ({CLOUD_NAME}/{FOLDER})</small>
+                        <img id="imagePreview" style="display: none;">
+                        <div id="uploadProgress" style="display: none;"></div>
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="uploadImageToCloudinary()">
+                    <input type="hidden" id="prodImage" required>
+                    
+                    <label style="font-weight: 700; display: block; margin-bottom: 5px;">📝 وصف المنتج</label>
+                    <textarea id="prodDesc" class="form-control" rows="2" placeholder="وصف مختصر"></textarea>
+                    
+                    <label style="font-weight: 700; display: block; margin-bottom: 5px;">📦 المخزون</label>
+                    <input type="number" id="prodStock" class="form-control" value="100" min="1">
+                    
+                    <button type="submit" class="btn-submit mt-4">
+                        <i class="fas fa-check-circle"></i> رفع المنتج الآن
                     </button>
                 </form>
             </div>
@@ -820,6 +911,9 @@ def html():
         
         let products = [];
         let cart = [];
+        const ADMIN_PASS = "{ADMIN_PASS}";
+        const CLOUD_NAME = "{CLOUD_NAME}";
+        const UPLOAD_FOLDER = "{FOLDER}";
         
         // تحميل المنتجات
         async function loadProducts() {{
@@ -841,7 +935,7 @@ def html():
             const grid = document.getElementById('productsGrid');
             
             if (products.length === 0) {{
-                grid.innerHTML = '<div class="col-12 text-center py-5"><i class="fas fa-box-open" style="font-size: 4rem; color: #ccc;"></i><h4 class="mt-3">لا توجد منتجات حالياً</h4><p>اضغط على زر "إضافة منتج" لإضافة منتجاتك</p></div>';
+                grid.innerHTML = '<div class="col-12 text-center py-5"><i class="fas fa-box-open" style="font-size: 4rem; color: #ccc;"></i><h4 class="mt-3">لا توجد منتجات حالياً</h4><p>اضغط على زر "تحميل منتج" لإضافة منتج جديد</p></div>';
                 return;
             }}
             
@@ -895,7 +989,7 @@ def html():
                 cart.push({{ id: p.id, name: p.name, price: p.price, image: p.image, quantity: qty }});
             }}
             updateCart();
-            toast('✅ تمت الإضافة إلى السلة!');
+            showToast('✅ تمت الإضافة إلى السلة!', 'success');
         }}
         
         // تحديث السلة
@@ -928,45 +1022,104 @@ def html():
         
         // إتمام الطلب
         function checkout() {{
-            if (cart.length === 0) {{ toast('⚠️ السلة فارغة!', 'error'); return; }}
+            if (cart.length === 0) {{ showToast('⚠️ السلة فارغة!', 'error'); return; }}
             document.getElementById('details').value = cart.map(i => `${{i.name}} (${{i.quantity}}×)`).join('\\n');
             bootstrap.Modal.getInstance(document.getElementById('cartModal')).hide();
             document.getElementById('contact').scrollIntoView({{ behavior: 'smooth' }});
         }}
         
-        // نافذة الإدارة
-        function openAdmin() {{
-            document.getElementById('adminModal').classList.add('show');
-            document.getElementById('passSection').style.display = 'block';
-            document.getElementById('addSection').style.display = 'none';
-            document.getElementById('adminPass').value = '';
+        // ✅ فتح نافذة التحميل
+        function openUploadModal() {{
+            document.getElementById('uploadModal').classList.add('show');
+            document.getElementById('passwordStep').style.display = 'block';
+            document.getElementById('uploadStep').style.display = 'none';
+            document.getElementById('uploadPassword').value = '';
+            document.getElementById('uploadForm').reset();
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('uploadProgress').style.display = 'none';
+            document.getElementById('uploadProgress').innerHTML = '';
         }}
         
-        function closeAdmin() {{
-            document.getElementById('adminModal').classList.remove('show');
+        function closeUploadModal() {{
+            document.getElementById('uploadModal').classList.remove('show');
         }}
         
-        function checkPass() {{
-            if (document.getElementById('adminPass').value === '{ADMIN_PASS}') {{
-                document.getElementById('passSection').style.display = 'none';
-                document.getElementById('addSection').style.display = 'block';
-                toast('✅ تم التحقق بنجاح!');
+        // ✅ التحقق من كلمة المرور
+        function verifyUploadPassword() {{
+            if (document.getElementById('uploadPassword').value === ADMIN_PASS) {{
+                document.getElementById('passwordStep').style.display = 'none';
+                document.getElementById('uploadStep').style.display = 'block';
+                showToast('✅ تم التحقق بنجاح!', 'success');
             }} else {{
-                toast('❌ رمز خاطئ!', 'error');
+                showToast('❌ رمز خاطئ!', 'error');
             }}
         }}
         
-        // إضافة منتج
-        document.getElementById('addForm').addEventListener('submit', async function(e) {{
+        // ✅ رفع الصورة إلى Cloudinary (dmla61v7n/so2_mk)
+        function uploadImageToCloudinary() {{
+            const file = document.getElementById('fileInput').files[0];
+            if (!file) return;
+            
+            const progressDiv = document.getElementById('uploadProgress');
+            progressDiv.style.display = 'block';
+            progressDiv.innerHTML = '<div class="progress"><div class="progress-bar" style="width:0%">جاري الرفع...</div></div>';
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'ml_default');
+            formData.append('folder', UPLOAD_FOLDER);
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + CLOUD_NAME + '/image/upload', true);
+            
+            xhr.upload.onprogress = function(e) {{
+                if (e.lengthComputable) {{
+                    const percent = Math.round((e.loaded / e.total) * 100);
+                    progressDiv.innerHTML = '<div class="progress"><div class="progress-bar" style="width:' + percent + '%">' + percent + '%</div></div>';
+                }}
+            }};
+            
+            xhr.onload = function() {{
+                if (xhr.status === 200) {{
+                    const response = JSON.parse(xhr.responseText);
+                    document.getElementById('prodImage').value = response.secure_url;
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = response.secure_url;
+                    preview.style.display = 'block';
+                    progressDiv.style.display = 'none';
+                    showToast('✅ تم رفع الصورة بنجاح!', 'success');
+                }} else {{
+                    progressDiv.style.display = 'none';
+                    showToast('❌ فشل رفع الصورة', 'error');
+                }}
+            }};
+            
+            xhr.onerror = function() {{
+                progressDiv.style.display = 'none';
+                showToast('❌ خطأ في الاتصال', 'error');
+            }};
+            
+            xhr.send(formData);
+        }}
+        
+        // ✅ رفع المنتج
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {{
             e.preventDefault();
+            
+            const imgUrl = document.getElementById('prodImage').value;
+            if (!imgUrl) {{
+                showToast('⚠️ الرجاء رفع صورة المنتج أولاً!', 'error');
+                return;
+            }}
+            
             const product = {{
                 id: Date.now(),
                 name: document.getElementById('prodName').value,
                 price: parseInt(document.getElementById('prodPrice').value),
-                category: document.getElementById('prodCat').value,
-                image: document.getElementById('prodImage').value,
+                category: document.getElementById('prodCat').value || 'منتج',
+                image: imgUrl,
                 description: document.getElementById('prodDesc').value,
-                stock: parseInt(document.getElementById('prodStock').value),
+                stock: parseInt(document.getElementById('prodStock').value) || 100,
                 rating: 5,
                 created: new Date().toISOString()
             }};
@@ -977,15 +1130,16 @@ def html():
             try {{ await db.ref('products/' + product.id).set(product); }} catch(e) {{}}
             
             renderProducts();
-            closeAdmin();
-            toast('✅ تمت إضافة المنتج بنجاح!');
+            closeUploadModal();
+            showToast('✅ تم رفع المنتج بنجاح! 🎉', 'success');
             this.reset();
+            document.getElementById('imagePreview').style.display = 'none';
         }});
         
         // طلب
         document.getElementById('orderForm').addEventListener('submit', async function(e) {{
             e.preventDefault();
-            if (cart.length === 0) {{ toast('⚠️ السلة فارغة!', 'error'); return; }}
+            if (cart.length === 0) {{ showToast('⚠️ السلة فارغة!', 'error'); return; }}
             
             const order = {{
                 name: document.getElementById('name').value,
@@ -999,18 +1153,18 @@ def html():
             
             try {{
                 await db.ref('orders').push(order);
-                toast('✅ تم إرسال الطلب بنجاح! سنتواصل معك');
+                showToast('✅ تم إرسال الطلب بنجاح! سنتواصل معك', 'success');
                 this.reset();
                 cart = [];
                 updateCart();
                 showCart();
             }} catch(e) {{
-                toast('❌ خطأ في الإرسال', 'error');
+                showToast('❌ خطأ في الإرسال', 'error');
             }}
         }});
         
         // توست
-        function toast(msg, type) {{
+        function showToast(msg, type) {{
             const t = document.getElementById('toast');
             t.textContent = msg;
             t.style.background = type === 'error' ? '#dc3545' : '#28a745';
@@ -1020,8 +1174,8 @@ def html():
         
         // أحداث
         document.getElementById('cartModal').addEventListener('show.bs.modal', showCart);
-        document.getElementById('adminModal').addEventListener('click', function(e) {{
-            if (e.target === this) closeAdmin();
+        document.getElementById('uploadModal').addEventListener('click', function(e) {{
+            if (e.target === this) closeUploadModal();
         }});
         
         // بدء
@@ -1060,18 +1214,21 @@ def main():
 
 ## متجر مستلزمات الحلاقة
 
-### 🔑 رمز الإدارة: `{ADMIN_PASS}`
+### 📦 Cloudinary: `{CLOUD_NAME}/{FOLDER}`
+### 🔑 رمز التحميل: `{ADMIN_PASS}`
 
-### ✨ المميزات:
-- زر إضافة منتج مع السعر
-- سلة تسوق
-- طلب مباشر
-- تصميم احترافي
+### ✨ طريقة رفع المنتج:
+1. اضغط على زر **"تحميل منتج"**
+2. أدخل الرمز: **{ADMIN_PASS}**
+3. ارفع صورة المنتج (ترفع مباشرة إلى Cloudinary)
+4. أدخل اسم المنتج + السعر
+5. اضغط **"رفع المنتج الآن"**
 ''')
     print("✅ README.md")
     
     print(f"\n🎉 تم! الموقع جاهز")
-    print(f"🔑 رمز الإدارة: {ADMIN_PASS}")
+    print(f"🔑 رمز التحميل: {ADMIN_PASS}")
+    print(f"📦 Cloudinary: {CLOUD_NAME}/{FOLDER}")
 
 if __name__ == '__main__':
     main()
