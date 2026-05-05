@@ -34,7 +34,6 @@ def html():
             background: #f0f2f5;
         }}
         
-        /* شريط علوي */
         .top-bar {{
             background: #1a1a1a;
             color: #c9a96e;
@@ -42,7 +41,6 @@ def html():
             font-size: 0.9rem;
         }}
         
-        /* التنقل */
         .navbar {{
             background: linear-gradient(135deg, #1a1a1a, #2c2c2c);
             padding: 15px 0;
@@ -91,31 +89,6 @@ def html():
         
         .nav-link:hover::after {{
             width: 100%;
-        }}
-        
-        /* زر التحميل */
-        .btn-upload {{
-            background: linear-gradient(135deg, #c9a96e, #b8963d);
-            color: #1a1a1a;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(201, 169, 110, 0.4);
-            animation: glow 2s infinite;
-        }}
-        
-        @keyframes glow {{
-            0%, 100% {{ box-shadow: 0 4px 15px rgba(201, 169, 110, 0.4); }}
-            50% {{ box-shadow: 0 4px 30px rgba(201, 169, 110, 0.8); }}
-        }}
-        
-        .btn-upload:hover {{
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(201, 169, 110, 0.6);
         }}
         
         .btn-cart {{
@@ -198,7 +171,6 @@ def html():
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }}
         
-        /* قسم المميزات */
         .features {{
             padding: 80px 0;
             background: white;
@@ -230,7 +202,6 @@ def html():
             margin-bottom: 15px;
         }}
         
-        /* المنتجات */
         .products-section {{
             padding: 80px 0;
             background: #f8f9fa;
@@ -503,7 +474,6 @@ def html():
             color: white;
         }}
         
-        /* منطقة رفع الصورة */
         .upload-area {{
             border: 3px dashed #c9a96e;
             border-radius: 15px;
@@ -553,7 +523,6 @@ def html():
             font-size: 0.85rem;
         }}
         
-        /* إشعار */
         .toast {{
             position: fixed;
             top: 20px;
@@ -580,7 +549,6 @@ def html():
             }}
         }}
         
-        /* السلة */
         .cart-modal .modal-content {{
             border-radius: 20px;
             border: none;
@@ -592,7 +560,7 @@ def html():
             border-radius: 20px 20px 0 0;
         }}
         
-        /* واتساب */
+        /* ✅ واتساب - جهة اليسار */
         .whatsapp-btn {{
             position: fixed;
             bottom: 30px;
@@ -625,7 +593,55 @@ def html():
             color: white;
         }}
         
-        /* Footer */
+        /* ✅ زر تحميل المنتج - جهة اليمين */
+        .upload-float-btn {{
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #c9a96e, #b8963d);
+            color: #1a1a1a;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 8px 30px rgba(201, 169, 110, 0.5);
+            z-index: 1000;
+            transition: 0.3s;
+            cursor: pointer;
+            border: none;
+            animation: bounce 2s infinite;
+        }}
+        
+        .upload-float-btn:hover {{
+            animation: none;
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(201, 169, 110, 0.7);
+        }}
+        
+        /* Tooltip للزر */
+        .upload-float-btn::after {{
+            content: 'تحميل منتج';
+            position: absolute;
+            right: 75px;
+            background: #1a1a1a;
+            color: #c9a96e;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            white-space: nowrap;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+        }}
+        
+        .upload-float-btn:hover::after {{
+            opacity: 1;
+        }}
+        
         footer {{
             background: #1a1a1a;
             color: white;
@@ -645,7 +661,6 @@ def html():
             margin-bottom: 20px;
         }}
         
-        /* Responsive */
         @media (max-width: 768px) {{
             .hero h1 {{
                 font-size: 2rem;
@@ -684,10 +699,6 @@ def html():
                     <li class="nav-item"><a class="nav-link" href="#contact">اتصل بنا</a></li>
                 </ul>
                 <div class="d-flex gap-3">
-                    <!-- ✅ زر تحميل منتج -->
-                    <button class="btn-upload" onclick="openUploadModal()">
-                        <i class="fas fa-cloud-upload-alt"></i> تحميل منتج
-                    </button>
                     <button class="btn-cart" data-bs-toggle="modal" data-bs-target="#cartModal">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="cart-count" id="cartCount">0</span>
@@ -779,12 +790,11 @@ def html():
         </div>
     </section>
 
-    <!-- ✅ نافذة تحميل المنتج المعدلة -->
+    <!-- نافذة تحميل المنتج -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-box">
             <button class="btn-close-modal" onclick="closeUploadModal()">✕</button>
             
-            <!-- الخطوة 1: كلمة المرور -->
             <div id="passwordStep">
                 <div style="text-align: center;">
                     <i class="fas fa-lock lock-icon"></i>
@@ -797,7 +807,6 @@ def html():
                 </button>
             </div>
             
-            <!-- الخطوة 2: واجهة الرفع -->
             <div id="uploadStep" style="display: none;">
                 <div style="text-align: center; margin-bottom: 25px;">
                     <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: #c9a96e;"></i>
@@ -870,10 +879,15 @@ def html():
         </div>
     </div>
 
-    <!-- واتساب -->
+    <!-- ✅ واتساب - يسار -->
     <a href="https://wa.me/966500000000" class="whatsapp-btn" target="_blank">
         <i class="fab fa-whatsapp"></i>
     </a>
+
+    <!-- ✅ زر تحميل المنتج - يمين -->
+    <button class="upload-float-btn" onclick="openUploadModal()" title="تحميل منتج">
+        <i class="fas fa-cloud-upload-alt"></i>
+    </button>
 
     <!-- Footer -->
     <footer>
@@ -915,7 +929,6 @@ def html():
         const CLOUD_NAME = "{CLOUD_NAME}";
         const UPLOAD_FOLDER = "{FOLDER}";
         
-        // تحميل المنتجات
         async function loadProducts() {{
             try {{
                 const snap = await db.ref('products').once('value');
@@ -930,12 +943,11 @@ def html():
             renderProducts();
         }}
         
-        // عرض المنتجات
         function renderProducts() {{
             const grid = document.getElementById('productsGrid');
             
             if (products.length === 0) {{
-                grid.innerHTML = '<div class="col-12 text-center py-5"><i class="fas fa-box-open" style="font-size: 4rem; color: #ccc;"></i><h4 class="mt-3">لا توجد منتجات حالياً</h4><p>اضغط على زر "تحميل منتج" لإضافة منتج جديد</p></div>';
+                grid.innerHTML = '<div class="col-12 text-center py-5"><i class="fas fa-box-open" style="font-size: 4rem; color: #ccc;"></i><h4 class="mt-3">لا توجد منتجات حالياً</h4><p>اضغط على زر التحميل <i class="fas fa-cloud-upload-alt"></i> أسفل الصفحة</p></div>';
                 return;
             }}
             
@@ -966,7 +978,6 @@ def html():
             `).join('');
         }}
         
-        // تغيير الكمية
         function changeQty(id, d) {{
             const inp = document.getElementById('qty-' + id);
             let v = parseInt(inp.value) + d;
@@ -977,7 +988,6 @@ def html():
             inp.value = v;
         }}
         
-        // إضافة للسلة
         function addToCart(id) {{
             const p = products.find(x => x.id === id);
             if (!p) return;
@@ -992,12 +1002,10 @@ def html():
             showToast('✅ تمت الإضافة إلى السلة!', 'success');
         }}
         
-        // تحديث السلة
         function updateCart() {{
             document.getElementById('cartCount').textContent = cart.reduce((s, i) => s + i.quantity, 0);
         }}
         
-        // عرض السلة
         function showCart() {{
             const body = document.getElementById('cartBody');
             if (cart.length === 0) {{
@@ -1020,7 +1028,6 @@ def html():
         
         function removeCart(i) {{ cart.splice(i, 1); updateCart(); showCart(); }}
         
-        // إتمام الطلب
         function checkout() {{
             if (cart.length === 0) {{ showToast('⚠️ السلة فارغة!', 'error'); return; }}
             document.getElementById('details').value = cart.map(i => `${{i.name}} (${{i.quantity}}×)`).join('\\n');
@@ -1044,7 +1051,6 @@ def html():
             document.getElementById('uploadModal').classList.remove('show');
         }}
         
-        // ✅ التحقق من كلمة المرور
         function verifyUploadPassword() {{
             if (document.getElementById('uploadPassword').value === ADMIN_PASS) {{
                 document.getElementById('passwordStep').style.display = 'none';
@@ -1055,7 +1061,6 @@ def html():
             }}
         }}
         
-        // ✅ رفع الصورة إلى Cloudinary (dmla61v7n/so2_mk)
         function uploadImageToCloudinary() {{
             const file = document.getElementById('fileInput').files[0];
             if (!file) return;
@@ -1102,7 +1107,6 @@ def html():
             xhr.send(formData);
         }}
         
-        // ✅ رفع المنتج
         document.getElementById('uploadForm').addEventListener('submit', async function(e) {{
             e.preventDefault();
             
@@ -1136,7 +1140,6 @@ def html():
             document.getElementById('imagePreview').style.display = 'none';
         }});
         
-        // طلب
         document.getElementById('orderForm').addEventListener('submit', async function(e) {{
             e.preventDefault();
             if (cart.length === 0) {{ showToast('⚠️ السلة فارغة!', 'error'); return; }}
@@ -1163,7 +1166,6 @@ def html():
             }}
         }});
         
-        // توست
         function showToast(msg, type) {{
             const t = document.getElementById('toast');
             t.textContent = msg;
@@ -1172,13 +1174,11 @@ def html():
             setTimeout(() => t.style.display = 'none', 3000);
         }}
         
-        // أحداث
         document.getElementById('cartModal').addEventListener('show.bs.modal', showCart);
         document.getElementById('uploadModal').addEventListener('click', function(e) {{
             if (e.target === this) closeUploadModal();
         }});
         
-        // بدء
         loadProducts();
         updateCart();
     </script>
@@ -1188,12 +1188,10 @@ def html():
 def main():
     print("🪒 بدء إنشاء الموقع...")
     
-    # index.html
     with open('index.html', 'w', encoding='utf-8') as f:
         f.write(html())
     print("✅ index.html")
     
-    # products.json
     with open('products.json', 'w', encoding='utf-8') as f:
         json.dump({
             'products': [],
@@ -1202,33 +1200,26 @@ def main():
         }, f, ensure_ascii=False, indent=2)
     print("✅ products.json")
     
-    # API
     os.makedirs('api', exist_ok=True)
     with open('api/products.json', 'w', encoding='utf-8') as f:
         json.dump([], f, ensure_ascii=False, indent=2)
     print("✅ api/products.json")
     
-    # README
     with open('README.md', 'w', encoding='utf-8') as f:
         f.write(f'''# 🪒 {SITE_NAME}
 
-## متجر مستلزمات الحلاقة
+## 📦 Cloudinary: `{CLOUD_NAME}/{FOLDER}`
+## 🔑 رمز التحميل: `{ADMIN_PASS}`
 
-### 📦 Cloudinary: `{CLOUD_NAME}/{FOLDER}`
-### 🔑 رمز التحميل: `{ADMIN_PASS}`
-
-### ✨ طريقة رفع المنتج:
-1. اضغط على زر **"تحميل منتج"**
-2. أدخل الرمز: **{ADMIN_PASS}**
-3. ارفع صورة المنتج (ترفع مباشرة إلى Cloudinary)
-4. أدخل اسم المنتج + السعر
-5. اضغط **"رفع المنتج الآن"**
+### ✨ المميزات:
+- زر تحميل منتج عائم بجانب الواتساب
+- رفع الصورة مباشرة إلى Cloudinary
+- سلة تسوق متكاملة
 ''')
     print("✅ README.md")
     
-    print(f"\n🎉 تم! الموقع جاهز")
+    print(f"\n🎉 تم!")
     print(f"🔑 رمز التحميل: {ADMIN_PASS}")
-    print(f"📦 Cloudinary: {CLOUD_NAME}/{FOLDER}")
 
 if __name__ == '__main__':
     main()
